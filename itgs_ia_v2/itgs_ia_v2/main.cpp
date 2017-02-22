@@ -14,29 +14,18 @@ int main(int, char**)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#if __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
+
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "ITGS-IA-CHAREKIAN", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	gl3wInit();
 
-	// Setup ImGui binding
 	ImGui_ImplGlfwGL3_Init(window, true);
 
-	// Load Fonts
-	// (there is a default font, this is only if you want to change it. see extra_fonts/README.txt for more details)
-	//ImGuiIO& io = ImGui::GetIO();
-	//io.Fonts->AddFontDefault();
-	//io.Fonts->AddFontFromFileTTF("../../extra_fonts/Cousine-Regular.ttf", 15.0f);
-	//io.Fonts->AddFontFromFileTTF("../../extra_fonts/DroidSans.ttf", 16.0f);
-	//io.Fonts->AddFontFromFileTTF("../../extra_fonts/ProggyClean.ttf", 13.0f);
-	//io.Fonts->AddFontFromFileTTF("../../extra_fonts/ProggyTiny.ttf", 10.0f);
-	//io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 
-	bool show_test_window = true;
+	bool info_window = true;
+	bool show_test_window = false;
 	bool show_another_window = false;
-	ImVec4 clear_color = ImColor(114, 144, 154);
+	ImVec4 color = ImColor(0, 128, 128);
 
 	// Main loop
 	while (!glfwWindowShouldClose(window))
@@ -44,39 +33,25 @@ int main(int, char**)
 		glfwPollEvents();
 		ImGui_ImplGlfwGL3_NewFrame();
 
-		// 1. Show a simple window
-		// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
-		{
-			static float f = 0.0f;
-			ImGui::Text("Hello, world!");
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-			ImGui::ColorEdit3("clear color", (float*)&clear_color);
-			if (ImGui::Button("Test Window")) show_test_window ^= 1;
-			if (ImGui::Button("Another Window")) show_another_window ^= 1;
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		}
-
-		// 2. Show another simple window, this time using an explicit Begin/End pair
-		if (show_another_window)
+		if (info_window)
 		{
 			ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
-			ImGui::Begin("Another Window", &show_another_window);
-			ImGui::Text("Hello");
+			ImGui::Begin("Test", &info_window);
+			ImGui::OpenPopup("Enter distance ran please");
+			ImGui::InputFloat("Input distance", &apace->distance, 0.1f, 1.0f);
+			ImGui::InputFloat("Input time", &apace->ttime, 0.1f, 1.0f);
+			ImGui::InputFloat("Input speed", &apace->speed, 0.1f, 1.0f);
+			ImGui::InputFloat("Input gradient", &apace->gradient, 0.1f, 1.0f);
+			ImGui::Text("Average pace %f", apace->calcavgpace(apace->distance, apace->ttime));
+			ImGui::Text("GAP pace %f", apace->calcgap(apace->distance, apace->speed, apace->gradient));
 			ImGui::End();
 		}
 
-		// 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
-		if (show_test_window)
-		{
-			ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
-			//ImGui::ShowTestWindow(&show_test_window);
-		}
-
-		// Rendering
-		int display_w, display_h;
-		glfwGetFramebufferSize(window, &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
-		glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+		
+		int w, h;
+		glfwGetFramebufferSize(window, &w, &h);
+		glViewport(0, 0, w, h);
+		glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui::Render();
 		glfwSwapBuffers(window);
