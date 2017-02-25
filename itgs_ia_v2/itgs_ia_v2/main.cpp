@@ -23,8 +23,6 @@ int main(int, char**)
 
 
 	bool info_window = true;
-	bool show_test_window = false;
-	bool show_another_window = false;
 	ImVec4 color = ImColor(0, 128, 128);
 
 	// Main loop
@@ -32,7 +30,7 @@ int main(int, char**)
 	{
 		glfwPollEvents();
 		ImGui_ImplGlfwGL3_NewFrame();
-
+		
 		if (info_window)
 		{
 			ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_FirstUseEver);
@@ -40,10 +38,12 @@ int main(int, char**)
 			ImGui::OpenPopup("Enter distance ran please");
 			ImGui::InputFloat("Input distance", &apace->distance, 0.1f, 1.0f);
 			ImGui::InputFloat("Input time", &apace->ttime, 0.1f, 1.0f);
-			ImGui::InputFloat("Input speed", &apace->speed, 0.1f, 1.0f);
 			ImGui::InputFloat("Input gradient", &apace->gradient, 0.1f, 1.0f);
-			ImGui::Text("Average pace %f", apace->calcavgpace(apace->distance, apace->ttime));
-			ImGui::Text("GAP pace %f", apace->calcgap(apace->distance, apace->speed, apace->gradient));
+			ImGui::Text("Average pace: %f", apace->calcavgpace(apace->distance, apace->ttime));
+			ImGui::Text("GAP pace: %f", apace->calcgap(apace->distance, (apace->getspeed(apace->averpace )* 1.60934f), apace->gradient));
+			ImGui::Text("Average Speed: %f(mph) %f(kph)", apace->getspeed(apace->averpace), (apace->getspeed(apace->averpace)* 1.60934f));
+			float arr[] = { apace->averpace, apace->gappace };
+			ImGui::PlotHistogram("Avg pace vs Gap Pace", arr, IM_ARRAYSIZE(arr), 0, "Avg Pace Gap Pace", 0.0f, std::min<int>(apace->averpace,100), ImVec2(0, 80));
 			ImGui::End();
 		}
 
