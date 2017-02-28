@@ -56,6 +56,8 @@ float avgpace::getspeed(float iavgpace)// i should use a switch for this but flo
 	if (iavgpace <= 10.00f)
 		return 6.0f;
 
+	return 0.0f;
+
 }
 
 
