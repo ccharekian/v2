@@ -25,7 +25,7 @@ float avgpace::calcavgpace(float idistance, float time)
 
 float avgpace::calcgap(float idistance, float ispeed, float igradient)
 {
-	float gap = ispeed / (1 + (9 * igradient));
+	float gap = 0.2f*ispeed / (0.2f + 1.8f *igradient);
 	this->gappace = gap;
 	return this->gappace;
 }
