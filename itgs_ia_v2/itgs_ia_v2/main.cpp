@@ -38,6 +38,7 @@ int main(int, char**)
 			ImGui::SetWindowPos(ImVec2(5, 5));
 			ImGui::Begin("About", &desc_window);
 			ImGui::Text( "This program was created to be used to calculate average pace and grade adjusted pace");
+			
 			ImGui::End();
 
 		}
